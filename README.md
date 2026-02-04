@@ -10,7 +10,7 @@ An interactive web-based mapping application that allows users to find UTM (Univ
 
 ## 🌐 Live Demo
 
-**<a href="https://utmzonefinder.netlify.app/" target="_blank" rel="noopener noreferrer">Launch Application</a>**
+<a href="https://utmzonefinder.netlify.app/" target="_blank" rel="noopener noreferrer"><strong>Launch Application →</strong></a>
 
 Try it now! Click anywhere on the map to see the UTM zone.
 
@@ -417,7 +417,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 - **Leaflet.js**: Powerful open-source mapping library
 - **GitHub**: Code hosting and collaboration
-- **Netlify/Vercel**: Free deployment platforms
+- **Netlify**: Free deployment platform
 
 ### Inspiration
 
@@ -447,12 +447,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - ⭐ **Star this repository** to follow updates
 - 👁️ **Watch** for notifications on changes
 - 🔔 **Subscribe** to release notifications
-
-### Connect
-
-- **GitHub**: [@kibetbrian74](https://github.com/kibetbrian74/)
-- **Email**: bkibetcheuiyot@gmail.com
-- **LinkedIn**: [Brian_Cheruiyot] (https://www.linkedin.com/in/brian-kibet-cheruiyot74/)
 
 ---
 
@@ -509,6 +503,11 @@ Have an idea? [Open an issue](https://github.com/yourusername/utm_zone_finder/is
 - [OpenStreetMap Wiki](https://wiki.openstreetmap.org/)
 - [Web Mapping Tutorial](https://maptimeboston.github.io/leaflet-intro/)
 
+### Connect
+
+- **GitHub**: [@kibetbrian74](https://github.com/kibetbrian74/)
+- **Email**: bkibetcheuiyot@gmail.com
+- **LinkedIn**: [Brian Cheruiyot](https://www.linkedin.com/in/brian-kibet-cheruiyot74/)
 ---
 
 <div align="center">
