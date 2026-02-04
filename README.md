@@ -10,7 +10,8 @@ An interactive web-based mapping application that allows users to find UTM (Univ
 
 ## 🌐 Live Demo
 
-<a href="https://utmzonefinder.netlify.app/" target="_blank" rel="noopener noreferrer"><strong>Launch Application →</strong></a>
+🔗 **[Launch Application](https://utmzonefinder.netlify.app/)**  
+*(Right-click → Open in new tab)*
 
 Try it now! Click anywhere on the map to see the UTM zone.
 
