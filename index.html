@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTM Zone Finder</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #d1cfcf;
+        }
+        #title {
+            background-color: #1e2035;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(30, 29, 48, 0.363);
+        }
+        #map {
+            height: calc(100vh - 60px);
+            width: 90%;
+            filter: grayscale(50%) brightness(1.1);
+            cursor: crosshair;
+            margin: auto;
+            display: block;
+        }
+        .leaflet-popup-content-wrapper {
+            background-color: rgba(50, 50, 50, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+        }
+        .leaflet-popup-content {
+            margin: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            min-width: 120px;
+        }
+        .leaflet-popup-tip {
+            background-color: rgba(50, 50, 50, 0.95);
+        }
+        .north-arrow {
+            position: absolute;
+            bottom: 30px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .north-arrow svg {
+            width: 40px;
+            height: 60px;
+        }
+        .info-box {
+            position: absolute;
+            top: 88%;
+            left: 35%;
+            z-index: 1000;
+            background: rgba(107, 107, 109, 0.74);
+            padding: 12px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            max-width: 400px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">UTM Zone Finder</div>
+    <div id="map"></div>
+    <div class="north-arrow">
+        <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+            <!-- Arrow head -->
+            <polygon points="30,10 20,30 40,30" fill="#333333"/>
+            <!-- Arrow shaft -->
+            <rect x="26" y="30" width="8" height="20" fill="#333333"/>
+            <!-- Letter N -->
+            <text x="30" y="65" font-size="16" font-weight="bold" text-anchor="middle" fill="#333333">N</text>
+        </svg>
+    </div>
+    <div class="info-box">
+        <strong>Instructions:</strong><br>
+        Click anywhere on the map to find the UTM zone for that location.
+    </div>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map', {center: [0, 0], zoom: 4, zoomControl: true});
+
+        // Offline base layer (OpenStreetMap tiles - these can be cached)
+        var offlineLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+            id: 'offline'
+        }).addTo(map);
+
+        // Online base layers (require internet connection)
+        var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles © Esri',
+            maxZoom: 18,
+            id: 'satellite'
+        });
+
+        var topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap',
+            maxZoom: 17,
+            id: 'topo'
+        });
+
+        var streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team',
+            maxZoom: 18,
+            id: 'humanitarian'
+        });
+
+        // Base layers control
+        var baseMaps = {
+            "Offline Map (Default)": offlineLayer,
+            "Satellite (Online)": satelliteLayer,
+            "Topographic (Online)": topoLayer,
+            "Humanitarian (Online)": streetLayer
+        };
+
+        L.control.layers(baseMaps).addTo(map);
+
+        // Function to calculate UTM zone
+        function calculateUTMZone(lat, lon) {
+            // UTM Zone calculation
+            var utmZone = Math.floor((lon + 180) / 6) + 1;
+            // Determine hemisphere
+            var hemisphere = lat >= 0 ? 'N' : 'S';
+            return utmZone + hemisphere;
+        }
+
+        // Click event handler
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+            // Calculate UTM zone
+            var utmZone = calculateUTMZone(lat, lon);
+            
+            // Create popup content
+            var popupContent = '<div style="text-align: center;">' +
+                               '<strong>UTM Zone ' + utmZone + '</strong><br>' +
+                               '<span style="font-size: 12px; font-weight: normal;">Lat: ' + lat.toFixed(4) + '°<br>' +
+                               'Lon: ' + lon.toFixed(4) + '°</span>' +
+                               '</div>';
+            
+            // Show popup at clicked location
+            var popup = L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map);
+            
+            // Auto-close popup after 1 second
+            setTimeout(function() {
+                map.closePopup(popup);
+            }, 1000);
+        });
+
+        // Add scale control
+        L.control.scale({position: 'bottomleft', imperial: false}).addTo(map);
+    </script>
+</body>
+</html>
